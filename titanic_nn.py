@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import tensorflow
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
@@ -7,28 +6,9 @@ from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 import csv
 
+from utils import *
+
 # pd.set_option('display.max_columns', 500)
-
-
-def read_data():
-    df = pd.read_csv('Data/train.csv')
-    df = df.dropna(axis=1)
-    data = df[['Survived', 'Pclass', 'Sex', 'SibSp', 'Parch', 'Fare']]
-
-    train_x = data.values[:, 1:]
-    train_x[:, 1] = (train_x[:, 1] == 'male').astype('int')
-
-    train_y = data.values[:, 0].astype('int')
-    train_y_oh = np.zeros((train_y.shape[0], 2))
-    train_y_oh[np.arange(train_y.shape[0]), train_y] = 1
-
-    test = pd.read_csv('Data/test.csv')
-    test_data = test[['Pclass', 'Sex', 'SibSp', 'Parch', 'Fare']]
-
-    test_x = test_data.values
-    test_x[:, 1] = (test_x[:, 1] == 'male').astype('int')
-
-    return train_x, train_y_oh, test_x
 
 
 # 3-layer NN
@@ -49,7 +29,7 @@ def titanic_model(layer_1=25, layer_2=35):
     return model
 
 
-x_train, y_train, x_test = read_data()
+x_train, y_train, x_test = read_data_nn()
 
 # Grid search: number of hidden units in layer 1 and layer 2 
 layer_1 = [10, 15, 20, 25, 30, 35, 40]
